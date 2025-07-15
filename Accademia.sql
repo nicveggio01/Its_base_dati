@@ -1,58 +1,95 @@
-Create Type Strutturato as ENUM ('Ricercatore', 'Professore Associato', 'Professore Ordinario');
-Create Type LavoroProgetto as ENUM ('Ricerca e Sviluppo', 'Dimostrazione', 'Managment', 'Altro');
-Create Type LavoroNonProgettuale as Enum('Didattica', 'Ricerca', 'Missione', 'Incontro Dipartimentale', 'Incontro Accademico', 'Altro');
-Create Type CausaAssenza as Enum('Chiusura Universitaria', 'Maternità', 'Malattia'); 
-Create domain PosInteger as integer
-check (value >=0)
-Create domain StringaM as varchar(100);
-Create domain Numero0re as integer
-check (value >= 0 and value < =8)
-Create domain Denaro as integer;
-check(value >=0)
+begin transaction;
 
-Create Table Persona(
-	id PosInteger PRIMARY KEY,
-	nome StringaM NOT NULL, 
-	cognome StringaM NOT NULL, 
-	posizione Strutturato NOT NULL,
-	stipendio Denaro NOT NULL
-	);
+-- Creazione dei domini
 
-Create Table Progetto(
-	id PosInteger PRIMARY KEY,
-	nome StringaM NOT NULL UNIQUE,
-	inizio DATE NOT NULL,
-	fine DATE NOT NULL,
-	check(inizio < fine),
-	budget Denaro NOT NULL
-	);
+create type Strutturato as 
+  enum('Ricercatore', 'Professore Associato', 'Professore Ordinario');
 
-Create Table WP(
-	progetto PosInteger UNIQUE,
-	id PosInteger NOT NULL,
-	PRIMARY KEY(progetto,id),
-	nome StringaM NOT NULL UNIQUE, 
-	inizio DATE NOT NULL,
-	fine DATE NOT NULL,
-	FOREIGN KEY(progetto) REFERENCES Progetto(id)
-	);
+create type LavoroProgetto as 
+  enum('Ricerca e Sviluppo', 'Dimostrazione', 'Management', 'Altro');
 
-Create Table AttivitaProgetto(
-	id PosInteger PRIMARY KEY,
-	persona PosInteger NOT NULL,
-	progetto PosInteger NOT NULL,
-	wp PosInteger NOT NULL,
-	giorno DATE NOT NULL,
-	tipo LavoroProgetto NOT NULL,
-	oreDurata Numero0re NOT NULL,
-	FOREIGN KEY(persona) REFERENCES Persona(id),
-	FOREIGN KEY(progetto,wp) REFERENCES WP(progetto, id)
-	);
-	
-Create Table Assenza(
-	id PosInteger PRIMARY KEY,
-	persona PosInteger NOT NULL UNIQUE,
-	tipo CausaAssenza NOT NULL,
-	giorno DATE NOT NULL UNIQUE,
-	FOREIGN KEY(persona) REFERENCES Persona(id)
-	);
+create type LavoroNonProgettuale as 
+  enum('Didattica', 'Ricerca', 'Missione', 
+    'Incontro Dipartimentale', 
+    'Incontro Accademico', 'Altro');
+
+create type CausaAssenza as 
+  enum('Chiusura Universitaria', 'Maternita', 'Malattia');
+
+create domain PosInteger as integer check (value >= 0);
+
+create domain StringaM as varchar(100);
+
+create domain NumeroOre as
+  integer check (value >= 0 and value <= 8);
+
+create domain Denaro as
+  real check (value >= 0);
+
+
+-- Creazione dello schema relazionale
+
+create table Persona (
+  id PosInteger not null,
+  nome StringaM not null,
+  cognome StringaM not null,
+  posizione strutturato not null,
+  stipendio Denaro not null,
+  primary key (id)  
+);
+
+create table Progetto (
+  id PosInteger not null,
+  nome StringaM not null,
+  inizio date not null,
+  fine date not null,
+  budget Denaro not null,
+  primary key (id),
+  unique (nome),
+  check (inizio < fine)
+);
+
+create table WP (
+  progetto PosInteger not null,
+  id PosInteger not null,  
+  nome StringaM not null,
+  inizio date not null,
+  fine date not null,
+  primary key (progetto, id),
+  unique (progetto, nome),
+  check (inizio < fine),  
+  foreign key (progetto) references Progetto(id) deferrable
+);
+
+create table AttivitaProgetto (
+  id PosInteger not null,
+  persona PosInteger not null,
+  progetto PosInteger not null,
+  wp PosInteger not null,
+  giorno date not null,
+  tipo LavoroProgetto not null,
+  oreDurata NumeroOre not null,
+  primary key (id),
+  foreign key (persona) references Persona(id) deferrable,
+  foreign key (progetto, wp) references WP(progetto, id) deferrable
+);
+
+create table AttivitaNonProgettuale (
+  id PosInteger not null,
+  persona PosInteger not null,
+  tipo LavoroNonProgettuale not null,
+  giorno date not null,
+  oreDurata NumeroOre not null,
+  primary key (id),
+  foreign key (persona) references Persona(id) deferrable
+);
+
+create table Assenza (
+  id PosInteger not null,
+  persona PosInteger not null,
+  tipo CausaAssenza not null,
+  giorno date not null,
+  primary key (id),
+  unique (persona, giorno),
+  foreign key (persona) references Persona(id) deferrable
+);
