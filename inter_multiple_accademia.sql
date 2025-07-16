@@ -1,8 +1,8 @@
 
 -- Quali sono il nome, la data di inizio e la data di fine dei WP del progetto di nome 'Pegasus'
 
-select  Progetto.nome as Nome, Progetto.inizio as dataInizio ,Progetto.fine as dataFine
-from Progetto
+select  pj.nome as Nome, pj.inizio as dataInizio, pj.fine as dataFine
+from Progetto pj
 where Progetto.nome='Pegasus';
 
 
@@ -20,7 +20,7 @@ join WP w
 on w.progetto = ap.progetto
 
 where pj.nome = 'Pegasus' 
-group by p.cognome having (count(w.nome) > 0)
+group by p.cognome having (count(w.progetto) > 0)
 order by p.cognome desc;
 
 
@@ -36,7 +36,7 @@ join WP w
 on w.progetto = ap.progetto
 
 where pj.nome = 'Pegasus' 
-group by p.cognome having (count(w.nome) > 1);
+group by p.cognome having (count(w.progetto) > 1);
 
 
 --Quali sono il nome, cognome e la posizione dei professori ordinari che hanno fatto almeno un'assenza per malattia?

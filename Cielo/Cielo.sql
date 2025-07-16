@@ -1,20 +1,14 @@
 begin transaction;
 
--- Creazione dei domini
-
+-- Domini
 create domain PosInteger as integer check (value >= 0);
-
 create domain StringaM as varchar(100);
+create domain CodIATA as char(3);
 
-create domain CodIATA as
-  char(3);
-
-
--- Creazione dello schema relazionale
-
-create table Compagnia(
+-- Tabelle
+create table Compagnia (
   nome StringaM not null,
-  annoFondaz PosInteger null,
+  annoFondaz PosInteger,
   primary key (nome)
 );
 
@@ -25,15 +19,20 @@ create table Aeroporto (
 );
 
 create table LuogoAeroporto (
-    aeroporto CodIATA not null,
-    citta StringaM not null,
-    nazione StringaM not null,
-    primary key (aeroporto),
-    foreign key (aeroporto) references Aeroporto(codice) deferrable
+  aeroporto CodIATA not null,
+  citta StringaM not null,
+  nazione StringaM not null,
+  primary key (aeroporto),
+  foreign key (aeroporto) references Aeroporto(codice) deferrable
 );
 
-alter table Aeroporto
-add foreign key (codice) references LuogoAeroporto(aeroporto) deferrable;
+create table Volo (
+  codice PosInteger not null,
+  comp StringaM not null,
+  durataMinuti PosInteger not null,
+  primary key (codice, comp),
+  foreign key (comp) references Compagnia(nome) deferrable
+);
 
 create table ArrPart (
   codice PosInteger not null,
@@ -42,18 +41,10 @@ create table ArrPart (
   partenza CodIATA not null,
   primary key (codice, comp),
   foreign key (arrivo) references Aeroporto(codice) deferrable,
-  foreign key (partenza) references Aeroporto(codice) deferrable
+  foreign key (partenza) references Aeroporto(codice) deferrable,
+  foreign key (codice, comp) references Volo(codice, comp) deferrable
 );
 
-create table Volo (
-  codice PosInteger not null,
-  comp StringaM not null,
-  durataMinuti PosInteger not null,
-  primary key (codice, comp),
-  foreign key (comp) references Compagnia(nome) deferrable,
-  foreign key (codice, comp) references ArrPart(codice, comp) deferrable
-);
+commit;
 
-alter table ArrPart
-add foreign key (codice, comp) references Volo(codice, comp) deferrable;
 

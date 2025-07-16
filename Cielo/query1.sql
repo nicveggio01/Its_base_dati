@@ -7,23 +7,67 @@ from Volo v
 join Compagnia c
 on v.comp = c.nome
 
-where v.durataMinuti > 180
+where v.durataMinuti > 180;
 
 
 
 
 -- 2. Quali sono le compagnie che hanno voli che superano le 3 ore?
 
+select distinct c.nome
+
+from Compagnia c 
+join Volo v
+on c.nome= v.comp
+
+where v.durataMinuti > 180;
+
 
 
 
 -- 3. Quali sono i voli (codice e nome della compagnia) che partono dall’aeroporto con codice 'CIA’ ?
 
+select v.codice, v.comp
+
+from Volo v
+join ArrPart ap 
+on v.codice = ap.codice and v.comp = ap.comp
+
+where ap.partenza = 'CIA';
+
+
+
+
 -- 4. Quali sono le compagnie che hanno voli che arrivano all’aeroporto con codice ‘FCO’ ?
+
+select distinct c.nome
+
+from Compagnia c
+join Volo v
+on v.comp = c. nome
+join ArrPart ap
+on v.codice = ap.codice and c.nome  =  ap.comp
+
+where ap.arrivo= 'FCO';
+
 
 -- 5. Quali sono i voli (codice e nome della compagnia) che partono dall’aeroporto ‘FCO’ e arrivano all’aeroporto ‘JFK’ ?
 
+select v.codice, v.comp
+
+from Volo v
+join ArrPart ap
+on v.codice = ap.codice and c.nome = ap.comp
+
+where ap.partenza = 'FCO' and ap.arrivo = 'JKF';
+
+
+
+
 -- 6. Quali sono le compagnie che hanno voli che partono dall’aeroporto ‘FCO’ e atterrano all’aeroporto ‘JFK’ ?
+
+
+
 
 -- 7. Quali sono i nomi delle compagnie che hanno voli diretti dalla città di ‘Roma’ alla città di ‘New York’ ?
 
