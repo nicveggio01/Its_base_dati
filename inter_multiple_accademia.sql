@@ -25,6 +25,7 @@ order by p.cognome desc;
 
 
 -- Quali sono il nome, il cognome e la posizione degli strutturati che hanno più di un attività nel progetto 'Pegasus'?
+
 Select p.nome, p.cognome, p.posizione 
   
 from AttivitaProgetto ap
@@ -40,6 +41,7 @@ group by p.cognome having (count(w.progetto) > 1);
 
 
 --Quali sono il nome, cognome e la posizione dei professori ordinari che hanno fatto almeno un'assenza per malattia?
+
 Select p.nome, p.cognome, p.posizione 
 from Persona p
 join Assenza a 
@@ -49,6 +51,7 @@ group by p.id, p.nome, p.cognome, p.posizione having (count(case when a.tipo= 'M
 
 
 -- Quali sono il nome ed il cognome edl aposizione dei professori ordinari che hanno fatto più di un'assenza per malattia?
+
 Select p.nome, p.cognome, p.posizione 
 from Persona p
 join Assenza a 
@@ -57,6 +60,7 @@ where p.posizione = 'Professore Ordinario' and a.tipo = 'Malattia'
 group by p.id, p.nome, p.cognome, p.posizione having (count( case when a.tipo= 'Malattia' then 1 end) > 1);
 
 -- Quali sono il nome, il cognome e la posizione dei ricercatori che hanno almeno un impegno per didatica?
+
 Select p.nome, p.cognome, p.posizione 
   
 from Persona p
@@ -66,6 +70,7 @@ where p.posizione = 'Ricercatore' and anp.tipo = 'Didattica'
 group by p.id, p.nome, p.cognome, p.posizione having (count( case when anp.tipo= 'Didattica' then 1 end) >= 1)
 
 -- Quali sono il nome, il cognome e la posizione dei ricercatori che hanno più di un impegno per didattica
+
 Select p.nome, p.cognome, p.posizione 
   
 from Persona p
@@ -75,6 +80,7 @@ where p.posizione = 'Ricercatore' and anp.tipo = 'Didattica'
 group by p.id, p.nome, p.cognome, p.posizione having (count( case when anp.tipo='Didattica' then 1 end) > 1);
 
 -- Quali sono il nome e il cognome degli strutturati che nello stesso giorno hanno sia attività progettuali che attività non progettuali?
+
 Select p.nome, p.cognome
   
 from Persona p
@@ -86,6 +92,7 @@ where ap.giorno = anp.giorno;
 
 
 --Quali sono il nome e il cognome degli strutturati che nello stesso giorno sono assenti e hanno attività progettuali?
+
 Select p.nome, p.cognome
   
 from Persona p

@@ -179,7 +179,7 @@ join LuogoAeroporto laArr
 on laArr.aeroporto = aArrivo.codice
 
 
-where laPart.citta = 'Roma' and laArr.citta = 'New York' and aScalo.codice = ap2.partenza
+where laPart.citta = 'Roma' and laArr.citta = 'New York' and aScalo.codice = ap2.partenza;
 
 
 -- 11. Quali sono le compagnie che hanno voli che partono dall’aeroporto ‘FCO’, atter-rano all’aeroporto ‘JFK’, e di cui si conosce l’anno di fondazione?
