@@ -45,7 +45,7 @@ from Persona p
 join Assenza a 
 on a.persona = p.id
 where p.posizione = 'Professore Ordinario' and a.tipo = 'Malattia'
-group by p.cognome having (count(a.tipo) > 0);
+group by p.id, p.nome, p.cognome, p.posizione having (count(case when a.tipo= 'Malattia' then 1 end) >=1 );
 
 
 -- Quali sono il nome ed il cognome edl aposizione dei professori ordinari che hanno fatto più di un'assenza per malattia?
@@ -54,7 +54,7 @@ from Persona p
 join Assenza a 
 on a.persona = p.id
 where p.posizione = 'Professore Ordinario' and a.tipo = 'Malattia'
-group by p.cognome having (count(a.tipo) > 1);
+group by p.id, p.nome, p.cognome, p.posizione having (count( case when a.tipo= 'Malattia' then 1 end) > 1);
 
 -- Quali sono il nome, il cognome e la posizione dei ricercatori che hanno almeno un impegno per didatica?
 Select p.nome, p.cognome, p.posizione 
@@ -63,7 +63,7 @@ from Persona p
 join AttivitaNonProgettuale anp
 on anp.persona = p.id
 where p.posizione = 'Ricercatore' and anp.tipo = 'Didattica'
-group by p.cognome having (count(anp.tipo) > 0)
+group by p.id, p.nome, p.cognome, p.posizione having (count( case when anp.tipo= 'Didattica' then 1 end) >= 1)
 
 -- Quali sono il nome, il cognome e la posizione dei ricercatori che hanno più di un impegno per didattica
 Select p.nome, p.cognome, p.posizione 
@@ -72,7 +72,7 @@ from Persona p
 join AttivitaNonProgettuale anp
 on anp.persona = p.id
 where p.posizione = 'Ricercatore' and anp.tipo = 'Didattica'
-group by p.cognome having (count(anp.tipo) > 1);
+group by p.id, p.nome, p.cognome, p.posizione having (count( case when anp.tipo='Didattica' then 1 end) > 1);
 
 -- Quali sono il nome e il cognome degli strutturati che nello stesso giorno hanno sia attività progettuali che attività non progettuali?
 Select p.nome, p.cognome
@@ -96,6 +96,7 @@ on ap.persona = p.id
 where ap.giorno = a.giorno;
 
 -- Quali sono il nome e il cognome degli strutturati che nello stesso giorno sono assenti e hanno attività progettuali? Si richiede di proiettare il giorno, il nome del progetto, la causa di assenza e la durata in ore della attività progettuale.
+
 Select p.nome, p.cognome, ap.giorno, pj.nome, a.tipo, datediff(pj.fine, pj.inizio)
   
 from Persona p
@@ -109,11 +110,14 @@ where ap.giorno = a.giorno;
 
 
 -- Quali sono i WP che hanno lo stesso nome, ma appartengono a progetti diversi?
-Select w.nome, pj.nome
-  
+
+select w.nome, pj.nome
+
 from WP w
-join Progetto pj
-on w.progetto = pj.id
-group by w.nome having ( count (pj.nome) > 1);
+join Progetto pj on w.progetto = pj.id
+where w.nome in (select nome from WP group by nome having count(distinct progetto) > 1);
+
+
+
 
 

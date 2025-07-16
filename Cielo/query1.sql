@@ -58,18 +58,35 @@ select v.codice, v.comp
 from Volo v
 join ArrPart ap
 on v.codice = ap.codice and c.nome = ap.comp
+join Compagnia c
+on c.nome = v.comp
 
-where ap.partenza = 'FCO' and ap.arrivo = 'JKF';
+where ap.partenza = 'FCO' and ap.arrivo = 'JFK';
 
 
 
 
 -- 6. Quali sono le compagnie che hanno voli che partono dall’aeroporto ‘FCO’ e atterrano all’aeroporto ‘JFK’ ?
 
+select distinct c.nome
 
+from Compagnia c
+join Volo v
+on v.comp = c.nome
+join ArrPart ap
+on v.codice = ap.codice and c.nome = ap.comp
+
+where ap.partenza = 'FCO' and ap.arrivo = 'JFK'
 
 
 -- 7. Quali sono i nomi delle compagnie che hanno voli diretti dalla città di ‘Roma’ alla città di ‘New York’ ?
+
+select distinct c.nome
+
+from 
+
+
+
 
 -- 8. Quali sono gli aeroporti (con codice IATA, nome e luogo) nei quali partono voli della compagnia di nome ‘MagicFly’ ?
 
