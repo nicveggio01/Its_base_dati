@@ -61,8 +61,8 @@ create table NumeroTelefono(
 
 create table Afferenza(
 
-    impiegato integer not null,
-    dipartimento integer not null,
+    impiegato int not null,
+    dipartimento int not null,
     data_afferenza date not null,
 
     primary key(dipartimento),
@@ -74,7 +74,7 @@ create table Afferenza(
 
 create table Dip_telefono(
 
-    dipartimento integer not null,
+    dipartimento int not null,
     telefono Stringa not null,
 
     primary key(dipartimento, telefono),
