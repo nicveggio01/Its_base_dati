@@ -3,7 +3,6 @@ begin transaction;
 
 set constraints all deferred;
 
--- Domini
 
 create domain RealGEZ as real
 check (value >=0);
@@ -14,8 +13,6 @@ create type Indirizzo as (
     via Stringa,
     civico Stringa
 );
-
--- Creazione Tabelle
 
 create table Impiegato(
 

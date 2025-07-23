@@ -1,3 +1,7 @@
+begin transaction;
+
+set constraints all deferred;
+
 
 CREATE DOMAIN RealGEZ AS real
     CHECK (value >= 0);

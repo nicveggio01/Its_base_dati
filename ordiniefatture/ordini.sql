@@ -1,3 +1,6 @@
+begin transaction;
+
+set constraints all deferred;
 
 CREATE DOMAIN RealGEZ AS real
     CHECK (value >= 0);
@@ -38,14 +41,15 @@ CREATE TABLE Citta (
 CREATE TABLE Regione (
     nome varchar PRIMARY KEY,
     citta integer NOT NULL,
-    FOREIGN KEY (citta) REFERENCES Citta(id),
+    FOREIGN KEY (citta) REFERENCES Citta(id) deferrable,
     UNIQUE(nome, nazione)
 );
 
 CREATE TABLE Nazione (
     nome varchar PRIMARY KEY,
     regione varchar NOT NULL,
-    FOREIGN KEY (regione) REFERENCES Regione(nome)
+    FOREIGN KEY (regione) REFERENCES Regione(nome) deferrable
+
 );
 
 CREATE TABLE Direttore (
@@ -55,7 +59,8 @@ CREATE TABLE Direttore (
     anni_servizio RealGEZ NOT NULL,
     data_nascita date NOT NULL,
     citta integer NOT NULL,
-    FOREIGN KEY (citta) REFERENCES Citta(id)
+    FOREIGN KEY (citta) REFERENCES Citta(id) deferrable
+
 );
 
 CREATE TABLE Dipartimento (
@@ -63,8 +68,8 @@ CREATE TABLE Dipartimento (
     indirizzo Indirizzo NOT NULL,
     direttore CodiceFiscale NOT NULL,
     citta integer not null,
-    FOREIGN KEY (direttore) REFERENCES Direttore(cf),
-    FOREIGN KEY citta REFERENCES Citta(id)
+    FOREIGN KEY (direttore) REFERENCES Direttore(cf) deferrable,
+    FOREIGN KEY citta REFERENCES Citta(id) deferrable
 );
 
 CREATE TABLE StatoOrdine (
@@ -80,8 +85,8 @@ CREATE TABLE Ordine (
     descrizione varchar NOT NULL,
     dipartimento varchar NOT NULL,
     statoOrdine integer NOT NULL,
-    FOREIGN KEY (dipartimento) REFERENCES Dipartimento(nome),
-    FOREIGN KEY (statoOrdine) REFERENCES StatoOrdine(id)
+    FOREIGN KEY (dipartimento) REFERENCES Dipartimento(nome) deferrable,
+    FOREIGN KEY (statoOrdine) REFERENCES StatoOrdine(id) deferrable
 );
 
 CREATE TABLE Fornitore (
@@ -91,8 +96,10 @@ CREATE TABLE Fornitore (
     telefono Telefono NOT NULL,
     email Email NOT NULL,
     citta integer NOT NULL,
-    FOREIGN KEY (citta) REFERENCES Citta(id)
+    FOREIGN KEY (citta) REFERENCES Citta(id) deferrable
 );
+
+commit;
 
 
 
