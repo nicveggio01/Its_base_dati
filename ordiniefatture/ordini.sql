@@ -39,10 +39,10 @@ CREATE TABLE Citta (
 );
 
 CREATE TABLE Regione (
-    nome varchar PRIMARY KEY,
+    nome varchar,
     citta integer NOT NULL,
     FOREIGN KEY (citta) REFERENCES Citta(id) deferrable,
-    UNIQUE(nome, nazione)
+    PRIMARY(nome, nazione)
 );
 
 CREATE TABLE Nazione (
