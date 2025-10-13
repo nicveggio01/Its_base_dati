@@ -10,7 +10,7 @@ Select p.posizione,
 COUNT(*) as numero_strutturati
 from Persona p
 GROUP BY p.posizione
-ORDER BY numero_strutturati ASC;
+ORDER BY p.posizione DESC;
 
 
 
@@ -32,11 +32,10 @@ WHERE p.fine <= current_date and p.budget > 50000;
 
 Select 
 avg(ap.oreDurata) as media_ore,
-max(ap.oreDurata) as massimo_ore,
-min(ap.oreDurata) as min_ore
-from Progetto p, AttivitaProgetto ap, Persona ps
-where ap.progetto = p.id and p.nome= 'Pegasus'
-;
+min(ap.oreDurata) as min_ore,
+max(ap.oreDurata) as massimo_ore
+from Progetto p, AttivitaProgetto ap
+where ap.progetto = p.id and p.nome= 'Pegasus';
 
 --5. Quali sono le medie, i massimi e i minimi delle ore giornaliere dedicate al progetto 'Pegasus' da ogni singolo docente?'
 
@@ -46,7 +45,7 @@ min(ap.oreDurata) as min_ore
 from Progetto p, AttivitaProgetto ap, Persona ps
 where ps.id=ap.persona and progetto = p.id and p.nome= 'Pegasus'
 group by ps.nome, ps.cognome, ps.id
-order by ps.nome ASC;
+order by media_ore desc;
 
 --6. Qual è il numero totale di ore dedicate alla didattica da ogni docente?--
 
@@ -59,8 +58,8 @@ order by ps.nome asc;
 --7.Qual è la media, il massimo e il minimo degli stipendi dei ricercatori? --
 
 Select avg(p.stipendio) as media_stipendi_ricercatori,
-max(p.stipendio) as massimo_stipendi_ricercatori,
-min(p.stipendio) as  minimo_stipendio_ricercatori
+min(p.stipendio) as  minimo_stipendio_ricercatori,
+max(p.stipendio) as massimo_stipendi_ricercatori
 from Persona p
 where p.posizione = 'Ricercatore';
 
@@ -68,15 +67,15 @@ where p.posizione = 'Ricercatore';
 
 Select p.posizione,
 avg(p.stipendio) as media_stipendi,
-max(p.stipendio) as massimo_stipendi,
-min(p.stipendio) as  minimo_stipendio
+min(p.stipendio) as  minimo_stipendio,
+max(p.stipendio) as massimo_stipendi
 from Persona p
 group by p.posizione
 order by p.posizione;
 
 --9. Quante ore ‘Ginevra Riva’ ha dedicato ad ogni progetto nel quale ha lavorato?
 
-Select p.id, p.nome, sum(a.oreDurata) as ore_totali_Ginevra_Rita
-from AttivitaProgetto a, Persona p
-where a.persona= p.id and p.nome='Ginevra' and p.cognome='Riva'
-group by p.id, p.nome;
+Select pj.id, pj.nome, sum(a.oreDurata) as ore_totali_Ginevra_Riva
+from Progetto pj, Persona p, AttivitaProgetto a
+where a.progetto= pj.id and p.id= a.persona and p.nome='Ginevra' and p.cognome='Riva'
+group by pj.id;
